@@ -4,24 +4,35 @@ acts_as_tree_with_dotted_ids
 This is an extension to Rails good old acts_as_tree which uses an extra "dotted_ids" column 
 which stores the path of the node as string of ID joined by dots, hence the name.
 
-This solves performances issues related to in-database tree structure by allowing for O(1)
-ancestor/child verification and O(N) subtree access.
+This optimization solves performance issues related to in-database tree structure by allowing 
+for O(1) ancestor/child verification and O(N) subtree access.
 
 The plugin adds the following instance methods:
+
+* ancestor_of?(node)
+* self_and_ancestors
+* descendant_of?(node)
+* all_children
+
+The following methods of have been rewritten to take advantage of the dotted IDs:
+
+* root
+* ancestors
+* siblings
+* self_and_sibbings
+
+
+From the original acts_as_tree README:
 
 * ancestor_of?(node)
 * descendant_of?(node)
 * all_children
 
-As well as rewritten, optimized versions of 
-
-From the original acts_as_tree README:
-
 Specify this +acts_as+ extension if you want to model a tree structure by providing a parent association and a children
 association. This requires that you have a foreign key column, which by default is called +parent_id+.
 
   class Category < ActiveRecord::Base
-    acts_as_tree :order => "name"
+    acts_as_tree_with_dotted_ids :order => "name"
   end
 
   Example:

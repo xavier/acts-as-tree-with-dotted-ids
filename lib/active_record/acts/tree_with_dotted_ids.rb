@@ -72,7 +72,7 @@ module ActiveRecord
           EOV
         end
         
-        # Performs a depth first traversal of the tree, yield each node to the given block 
+        # Performs a depth-first traversal of the tree, yielding each node to the given block 
         def traverse(nodes = nil, &block)
           nodes ||= self.roots
           nodes.each do |node|
@@ -82,7 +82,7 @@ module ActiveRecord
         end
         
         # Traverse the whole tree from roots to leaves and rebuild the dotted_ids path
-        # Call it from you migration to upgrade an existing acts_as_tree model.
+        # Call it from your migration to upgrade an existing acts_as_tree model.
         def rebuild_dotted_ids!
           transaction do
             traverse { |node| node.dotted_ids = nil; node.save! }
