@@ -6,32 +6,35 @@ which stores the path of the node as a string of ID joined by dots, hence the na
 This optimization solves performance issues related to in-database tree structure by allowing 
 for direct O(1) ancestor/child verification and O(N) subtree access with one single query.
 
-class Category < ActiveRecord::Base
-  acts_as_tree_with_dotted_ids :order => "name"
-end
-
+  class Category < ActiveRecord::Base
+    acts_as_tree_with_dotted_ids :order => "name"
+  end
+  
 Example:
-root
- \_ child1
-      \_ subchild1
-      \_ subchild2
 
-root      = Category.create("name" => "root")
-child1    = root.children.create("name" => "child1")
-subchild1 = child1.children.create("name" => "subchild1")
+  root
+   \_ child1
+        \_ subchild1
+        \_ subchild2
 
-root.parent   # => nil
-child1.parent # => root
-root.children # => [child1]
-root.children.first.children.first # => subchild1
-
-root.id              # 1
-root.dotted_ids      # "1"
-child1.id            # 2
-child1.dotted_ids    # "1.2"
-subchild1.id         # 3
-subchild1.dotted_ids # "1.2.3"
-
+Usage:
+ 
+  root      = Category.create("name" => "root")
+  child1    = root.children.create("name" => "child1")
+  subchild1 = child1.children.create("name" => "subchild1")
+  
+  root.parent   # => nil
+  child1.parent # => root
+  root.children # => [child1]
+  root.children.first.children.first # => subchild1
+  
+  root.id              # 1
+  root.dotted_ids      # "1"
+  child1.id            # 2
+  child1.dotted_ids    # "1.2"
+  subchild1.id         # 3
+  subchild1.dotted_ids # "1.2.3"
+  
 == Improvements
 
 The plugin adds the following instance methods:
@@ -51,16 +54,13 @@ The following methods of have been rewritten to take advantage of the dotted IDs
 
 If you already have an +acts_as_tree+ model, you can easily upgrade it to take advantage of the dotted IDs.
 
-1. Just add the "dotted_ids" column to your table.  
-In most case a string should be enough but if your tree is very deep you may want to use a text column.
-
+1. Just add the "dotted_ids" column to your table.  In most case a string should be enough (it's also better for the indexing) but if your tree is very deep you may want to use a text column.
 2. Call MyTreeModel.rebuild_dotted_ids! and your ready to go.
 
 
 == Compatibility
 
-Tested with Rails 2.x.
-Tested with MySQL 5.x and SQLite.
+Tested with Rails 2.x and MySQL 5.x as well as SQLite.
 
 
 == Thanks
