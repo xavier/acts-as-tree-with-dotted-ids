@@ -28,12 +28,18 @@ module ActiveRecord
       #   root.children.first.children.first # => subchild1
       #
       # In addition to the parent and children associations, the following instance methods are added to the class
-      # after calling <tt>acts_as_tree</tt>:
+      # after calling <tt>acts_as_tree_with_dotted_ids</tt>:
       # * <tt>siblings</tt> - Returns all the children of the parent, excluding the current node (<tt>[subchild2]</tt> when called on <tt>subchild1</tt>)
       # * <tt>self_and_siblings</tt> - Returns all the children of the parent, including the current node (<tt>[subchild1, subchild2]</tt> when called on <tt>subchild1</tt>)
       # * <tt>ancestors</tt> - Returns all the ancestors of the current node (<tt>[child1, root]</tt> when called on <tt>subchild2</tt>)
+      # * <tt>self_and_ancestors</tt> - Returns all the ancestors of the current node (<tt>[subchild2, child1, root]</tt> when called on <tt>subchild2</tt>)
       # * <tt>root</tt> - Returns the root of the current node (<tt>root</tt> when called on <tt>subchild2</tt>)
       # * <tt>depth</tt> - Returns the depth of the current node starting from 0 as the depth of root nodes.
+      #
+      # The following class methods are added
+      # * <tt>traverse</tt> - depth-first traversal of the tree (warning: it does *not* rely on the dotted_ids as it is used to rebuild the tree)
+      # * <tt>rebuild_dotted_ids!</tt> - rebuilt the dotted IDs for the whole tree, use this once to migrate an existing +acts_as_tree+ model to +acts_as_tree_with_dotted_ids+
+      
       module ClassMethods
         # Configuration options are:
         #

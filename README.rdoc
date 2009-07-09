@@ -1,5 +1,4 @@
-acts_as_tree_with_dotted_ids
-============================
+= acts_as_tree_with_dotted_ids
 
 This is an extension to Rails good old acts_as_tree which uses an extra "dotted_ids" column 
 which stores the path of the node as a string of ID joined by dots, hence the name.
@@ -33,6 +32,7 @@ child1.dotted_ids    # "1.2"
 subchild1.id         # 3
 subchild1.dotted_ids # "1.2.3"
 
+== Improvements
 
 The plugin adds the following instance methods:
 
@@ -49,7 +49,7 @@ The following methods of have been rewritten to take advantage of the dotted IDs
 * siblings
 * self_and_sibblings
 
-If you already have an acts_as_tree model, you can easily upgrade it to take advantage of the dotted IDs.
+If you already have an +acts_as_tree+ model, you can easily upgrade it to take advantage of the dotted IDs.
 
 1. Just add the "dotted_ids" column to your table.  
 In most case a string should be enough but if your tree is very deep you may want to use a text column.
@@ -57,13 +57,13 @@ In most case a string should be enough but if your tree is very deep you may wan
 2. Call MyTreeModel.rebuild_dotted_ids! and your ready to go.
 
 
-Compatibility
+== Compatibility
 
 Tested with Rails 2.x.
 Tested with MySQL 5.x and SQLite.
 
 
-Thanks
+== Thanks
 
 Kudos to all the contributors to the original plugin.
 
