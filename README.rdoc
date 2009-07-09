@@ -27,30 +27,32 @@ Usage:
   child1.parent # => root
   root.children # => [child1]
   root.children.first.children.first # => subchild1
+  child1.ancestors_of?(subchild2)    # => true
+  subchild1.descendant_of?(root)     # => true
   
   root.id              # 1
-  root.dotted_ids      # "1"
   child1.id            # 2
-  child1.dotted_ids    # "1.2"
   subchild1.id         # 3
+  root.dotted_ids      # "1"
+  child1.dotted_ids    # "1.2"
   subchild1.dotted_ids # "1.2.3"
   
 == Improvements
 
 The plugin adds the following instance methods:
 
-* ancestor_of?(node)
-* self_and_ancestors
-* descendant_of?(node)
-* all_children
-* depth
+* +ancestor_of?(node)+
+* +self_and_ancestors+
+* +descendant_of?(node)+
+* +all_children+
+* +depth+
 
 The following methods of have been rewritten to take advantage of the dotted IDs:
 
-* root
-* ancestors
-* siblings
-* self_and_sibblings
+* +root+
+* +ancestors+
+* +siblings+
+* +self_and_sibblings+
 
 If you already have an +acts_as_tree+ model, you can easily upgrade it to take advantage of the dotted IDs.
 
@@ -69,4 +71,5 @@ Kudos to all the contributors to the original plugin.
 
 
 Copyright (c) 2007 David Heinemeier Hansson, released under the MIT license
+
 Copyright (c) 2008 Xavier Defrang, released under the MIT license
