@@ -224,7 +224,6 @@ class TreeTestWithoutOrder < Test::Unit::TestCase
 end 
 
 class TestDottedIdTree < Test::Unit::TestCase
-  # Replace this with your real tests.
   
   def setup
     setup_db
@@ -356,10 +355,15 @@ class TestDottedIdTree < Test::Unit::TestCase
    
    def test_rebuild_dotted_ids
      
-     # TreeMixin.rebuild_dotted_ids!
-     # assert !TreeMixin.find(:all).any? { |n| n.dotted_ids.blank? }
-     # 
-     # test
+     TreeMixin.update_all('dotted_ids = NULL')
+     assert TreeMixin.find(:all).all? { |n| n.dotted_ids.blank? }
+     @subchild.reload
+     assert_nil @subchild.dotted_ids
+     
+     TreeMixin.rebuild_dotted_ids!
+     assert TreeMixin.find(:all).all? { |n| n.dotted_ids.present? }
+     @subchild.reload
+     assert_equal "#{@tree.id}.#{@child.id}.#{@subchild.id}", @subchild.dotted_ids
      
    end
    
