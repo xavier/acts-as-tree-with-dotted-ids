@@ -90,10 +90,15 @@ module ActiveRecord
         # Traverse the whole tree from roots to leaves and rebuild the dotted_ids path
         # Call it from your migration to upgrade an existing acts_as_tree model.
         def rebuild_dotted_ids!
+          self.rebuild_dotted_ids_in_progress = true
           transaction do
             traverse { |node| node.dotted_ids = nil; node.save! }
           end
+        ensure
+          self.rebuild_dotted_ids_in_progress = false
         end
+        
+        attr_accessor :rebuild_dotted_ids_in_progress
         
       end
 
@@ -201,14 +206,15 @@ module ActiveRecord
         
         # After validation on update, rebuild dotted ids if necessary
         def update_dotted_ids
-          return unless parent_foreign_key_changed?
-          old_dotted_ids = self.dotted_ids
-          old_dotted_ids_regex = Regexp.new("^#{Regexp.escape(old_dotted_ids)}(.*)")
-          self.dotted_ids = build_dotted_ids
-          replace_pattern = "#{self.dotted_ids}\\1"          
-          find_all_children_with_dotted_ids(old_dotted_ids).each do |node|
-            new_dotted_ids = node.dotted_ids.gsub(old_dotted_ids_regex, replace_pattern)
-            node.update_attribute(:dotted_ids, new_dotted_ids)
+          if parent_foreign_key_changed? || self.class.rebuild_dotted_ids_in_progress
+            old_dotted_ids = self.dotted_ids || ''
+            old_dotted_ids_regex = Regexp.new("^#{Regexp.escape(old_dotted_ids)}(.*)")
+            self.dotted_ids = build_dotted_ids
+            replace_pattern = "#{self.dotted_ids}\\1"          
+            find_all_children_with_dotted_ids(old_dotted_ids).each do |node|
+              new_dotted_ids = node.dotted_ids.gsub(old_dotted_ids_regex, replace_pattern)
+              node.update_attribute(:dotted_ids, new_dotted_ids)
+            end
           end
         end
         

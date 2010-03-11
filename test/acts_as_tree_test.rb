@@ -1,6 +1,7 @@
 require 'test/unit'
 
 require 'rubygems'
+gem 'activerecord', '=2.3.4'
 require 'active_record'
 
 $:.unshift File.dirname(__FILE__) + '/../lib'
@@ -353,7 +354,7 @@ class TestDottedIdTree < Test::Unit::TestCase
      
    end
    
-   def test_rebuild_dotted_ids
+   def test_rebuild_dotted_ids_on_blank_dotted_ids
      
      TreeMixin.update_all('dotted_ids = NULL')
      assert TreeMixin.find(:all).all? { |n| n.dotted_ids.blank? }
@@ -367,6 +368,13 @@ class TestDottedIdTree < Test::Unit::TestCase
      
    end
    
+   # Pointed out by http://github.com/pupeno/acts-as-tree-with-dotted-ids/commit/ef1ee5ffe8d08bb0e223af3160f5b359eef5e301
+   def test_rebuild_dotted_ids_on_existing_dotted_ids
+     assert TreeMixin.all.all? { |n| n.dotted_ids }
+     TreeMixin.rebuild_dotted_ids!
+     assert TreeMixin.all.all? { |n| n.dotted_ids }
+   end
+   
    def test_depth
      assert_equal 0, @tree.depth
      assert_equal 1, @child.depth
@@ -374,4 +382,3 @@ class TestDottedIdTree < Test::Unit::TestCase
    end
    
 end
-
