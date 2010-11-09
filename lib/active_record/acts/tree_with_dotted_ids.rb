@@ -57,7 +57,7 @@ module ActiveRecord
             :order => configuration[:order], :dependent => :destroy, &b
 
           after_save                 :assign_dotted_ids
-          after_validation_on_update :update_dotted_ids
+          after_validation           :update_dotted_ids, :on => :update
 
           class_eval <<-EOV
             include ActiveRecord::Acts::TreeWithDottedIds::InstanceMethods
