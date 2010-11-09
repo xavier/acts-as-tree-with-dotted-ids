@@ -70,6 +70,8 @@ Tested with Rails 2.x and MySQL 5.x as well as SQLite.
 
 == Thanks
 
+Gem packaging and Rails 3 compatibility by Thomas Maurer -- http://github.com/tma
+
 Kudos to all the contributors to the original plugin.
 
 
